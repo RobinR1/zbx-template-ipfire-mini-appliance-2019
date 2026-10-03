@@ -7,7 +7,7 @@ This template gathers statistics for the [IPFire Mini Appliance (2019)](https://
 
 ## Overview
 
-For Zabbix version: [7.4](./7.4/)
+For Zabbix version: 7.4
 
 Supports monitoring of:
 * Firmware/BIOS version
