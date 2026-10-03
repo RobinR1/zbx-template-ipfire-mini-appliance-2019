@@ -32,6 +32,26 @@ Robin Roevens
 
 - Install and configure [IPFire addon `zabbix_agentd`](https://www.ipfire.org/docs/addons/zabbix_agentd)
   using Pakfire.
+- Install the `firmware-update` package on the IPFire Mini appliance (if not already installed)
+- Login to the IPFire Mini appliance SSH console
+    - Create a new config file for the zabbix_agentd userparameters:
+      ```bash
+      vi /etc/zabbix_agentd/zabbix_agentd.d/template_ipfire_mini_appliance_2019.conf
+      ```
+    - Paste the following content into the file (`i` to enter insert mode in Vi):
+      ```ini
+      UserParameter=ipfire_appliance.firmware.info,sudo /usr/sbin/firmware-update info | awk -F':' 'BEGIN { ORS = ""; print "{" } { gsub(/^[ \t]+|[ \t]+$/, "", $1); gsub(/^[ \t]+|[ \t]+$/, "", $2); printf "%s\"%s\":\"%s\"", separator, $1, $2; separator = ","; } END { print "}" }' 
+      ```
+    - Save the file and exit the editor (`:wq`).
+    - Edit the sudoers file for the zabbix_agentd user to allow running dmidecode without a password:
+      ```bash
+      visudo -f /etc/sudoers.d/zabbix_agentd_user
+      ```
+    - Add the following line (`i` to enter insert mode in Vi):
+      ```
+      zabbix ALL=(ALL) NOPASSWD: /usr/sbin/firmware-update info
+      ```
+    - Save the file and exit the editor (`:wq`).
 
 ## Zabbix configuration
 
